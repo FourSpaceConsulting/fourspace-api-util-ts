@@ -44,12 +44,10 @@ export type ExpressLikeRequestHandler<TRequest extends ExpressLikeRequest, TResp
 /**
  * Handler for express error routes
  */
-export type ExpressLikeErrorRequestHandler<TRequest extends ExpressLikeRequest, TResponse extends ExpressLikeResponse> = (
-    err: any,
-    req: TRequest,
-    res: TResponse,
-    next: ExpressLikeNextFunction
-) => Promise<void> | void;
+export type ExpressLikeErrorRequestHandler<
+    TRequest extends ExpressLikeRequest,
+    TResponse extends ExpressLikeResponse
+> = (err: any, req: TRequest, res: TResponse, next: ExpressLikeNextFunction) => Promise<void> | void;
 
 /**
  * Configuration for an express route
