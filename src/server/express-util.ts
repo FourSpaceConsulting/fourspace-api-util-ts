@@ -17,7 +17,7 @@ export const applyMiddleware = (middleware: ExpressLikeRouterAppender[], router:
     }
 };
 
-export const applyRoutes = (routes: readonly RouteConfiguration[], router: ExpressLikeRouter) => {
+export const applyRoutes = <TRequest extends ExpressLikeRequest, TResponse extends ExpressLikeResponse>(routes: readonly RouteConfiguration<TRequest, TResponse>[], router: ExpressLikeRouter) => {
     for (const route of routes) {
         const { method, path, handler } = route;
         (router as any)[method](path, handler);
@@ -53,10 +53,10 @@ export const sendServerError = (err: Error, res: ExpressLikeResponse, next: Expr
  * Sends a 200 response with the result of the request functor
  * @param f
  */
-export function sendResult<T>(f: (req: ExpressLikeRequest) => Promise<T> | T): ExpressLikeRequestHandler {
-    return async (r: ExpressLikeRequest, res: ExpressLikeResponse) => {
-        const result = await f(r);
-        res.status(200).json(result);
+export function sendResult<T>(f: (req: ExpressLikeRequest) => Promise<T> | T): ExpressLikeRequestHandler<ExpressLikeRequest, ExpressLikeResponse> {
+    return async (request, response) => {
+        const result = await f(request);
+        response.status(200).json(result);
     };
 }
 
@@ -75,3 +75,4 @@ export function getAuthorizationHeader(r: ExpressLikeRequest): string {
 }
 
 //#endregion
+

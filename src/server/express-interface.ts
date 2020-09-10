@@ -35,28 +35,28 @@ export enum ApiMethod {
 /**
  * Handler for express routes
  */
-export type ExpressLikeRequestHandler = (
-    req: ExpressLikeRequest,
-    res: ExpressLikeResponse,
+export type ExpressLikeRequestHandler<TRequest extends ExpressLikeRequest, TResponse extends ExpressLikeResponse> = (
+    req: TRequest,
+    res: TResponse,
     next: ExpressLikeNextFunction
 ) => Promise<void> | void;
 
 /**
  * Handler for express error routes
  */
-export type ExpressLikeErrorRequestHandler = (
-    err: Error,
-    req: ExpressLikeRequest,
-    res: ExpressLikeResponse,
+export type ExpressLikeErrorRequestHandler<TRequest extends ExpressLikeRequest, TResponse extends ExpressLikeResponse> = (
+    err: any,
+    req: TRequest,
+    res: TResponse,
     next: ExpressLikeNextFunction
 ) => Promise<void> | void;
 
 /**
  * Configuration for an express route
  */
-export type RouteConfiguration = {
+export type RouteConfiguration<TRequest extends ExpressLikeRequest, TResponse extends ExpressLikeResponse> = {
     path: string;
     method: string;
-    handler: ExpressLikeRequestHandler | ExpressLikeRequestHandler[];
+    handler: ExpressLikeRequestHandler<TRequest, TResponse> | ExpressLikeRequestHandler<TRequest, TResponse>[];
 };
 //#endregion
