@@ -5,20 +5,16 @@ import * as ExpressUtil from '../src/server/express-util';
 
 describe('Test Error Handler', () => {
 
-    // Mock the token dao and date provider
-    type ResponseWrapper = { self: ExpressLikeResponse };
-    const ResponseMocker = jest.fn<ExpressLikeResponse, any>((thisWrapper: ResponseWrapper) => ({
-        //        status: jest.fn((key) => Promise.resolve(testToken.key === key ? testToken : null)),
-        status: jest.fn(() => thisWrapper.self),
-        send: jest.fn(() => thisWrapper.self),
-        json: jest.fn(() => thisWrapper.self),
+    // Mock the response
+    const ResponseMocker = jest.fn<ExpressLikeResponse, any>(() => ({
+        status: jest.fn().mockReturnThis(),
+        send: jest.fn().mockReturnThis(),
+        json: jest.fn().mockReturnThis()
     }));
 
     test('Test throw client error', async () => {
         // arrange
-        const mockWrapper: ResponseWrapper = { self: null };
-        const mockResponse = new ResponseMocker(mockWrapper);
-        mockWrapper.self = mockResponse;
+        const mockResponse = new ResponseMocker();
         // act
         try {
             ExceptionServiceInstance.throwBadRequest();
@@ -36,9 +32,7 @@ describe('Test Error Handler', () => {
 
     test('Test throw client error with message', async () => {
         // arrange
-        const mockWrapper: ResponseWrapper = { self: null };
-        const mockResponse = new ResponseMocker(mockWrapper);
-        mockWrapper.self = mockResponse;
+        const mockResponse = new ResponseMocker();
         // act
         try {
             ExceptionServiceInstance.throwForbidden('Test Message');
@@ -57,9 +51,7 @@ describe('Test Error Handler', () => {
 
     test('Test throw non-client error', async () => {
         // arrange
-        const mockWrapper: ResponseWrapper = { self: null };
-        const mockResponse = new ResponseMocker(mockWrapper);
-        mockWrapper.self = mockResponse;
+        const mockResponse = new ResponseMocker();
         // act
         let error: Error = new Error('Test Error');
         try {

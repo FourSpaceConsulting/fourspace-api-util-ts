@@ -7,6 +7,10 @@ import {
     ExpressLikeRouterAppender,
 } from '../server/express-interface';
 import * as ExpressUtil from '../server/express-util';
+import { LogFactory, Logger } from 'fourspace-logger-ts';
+
+const LOGGER: Logger = LogFactory.getLogger('error-handlers');
+
 
 /**
  * These functions handle errors after the API routes have been processed in the middleware.
@@ -32,6 +36,7 @@ export const createErrorHandlers = (ex: ExceptionService): ExpressLikeRouterAppe
 
     const handleServerError = (router: ExpressLikeRouter) => {
         router.use((err: Error, _: ExpressLikeRequest, res: ExpressLikeResponse, next: ExpressLikeNextFunction) => {
+            LOGGER.debug('Server error: ', err);
             ExpressUtil.sendServerError(err, res, next);
         });
     };

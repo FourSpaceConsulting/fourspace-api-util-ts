@@ -42,5 +42,7 @@
     "tslint-config-prettier": "^1.18.0",
     "typescript": "^3.8.3"
   },
-  "dependencies": {}
+  "dependencies": {
+    "fourspace-logger-ts": "^1.0.2"
+  }
 }

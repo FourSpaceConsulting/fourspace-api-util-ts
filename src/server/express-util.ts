@@ -32,9 +32,6 @@ export const applyRoutes = <TRequest extends ExpressLikeRequest, TResponse exten
 
 export const sendIfClientError = (err: Error, res: ExpressLikeResponse, next: ExpressLikeNextFunction) => {
     if (err instanceof HTTPClientError) {
-        if (process.env.NODE_ENV !== 'test') {
-            // console.warn(err);
-        }
         res.status(err.statusCode).send(err.message);
     } else {
         next(err);
@@ -42,7 +39,6 @@ export const sendIfClientError = (err: Error, res: ExpressLikeResponse, next: Ex
 };
 
 export const sendServerError = (err: Error, res: ExpressLikeResponse, next: ExpressLikeNextFunction) => {
-    // console.error('Middleware caught error:', typeof err, err);
     if (process.env.NODE_ENV == null || process.env.NODE_ENV === 'production') {
         res.status(500).send('Internal server error');
     } else {
@@ -56,9 +52,9 @@ export const sendServerError = (err: Error, res: ExpressLikeResponse, next: Expr
  * Sends a 200 response with the result of the request functor
  * @param f
  */
-export function sendResult<T>(
-    f: (req: ExpressLikeRequest) => Promise<T> | T
-): ExpressLikeRequestHandler<ExpressLikeRequest, ExpressLikeResponse> {
+export function sendResult<R extends ExpressLikeRequest, T>(
+    f: (req: R) => Promise<T> | T
+): ExpressLikeRequestHandler<R, ExpressLikeResponse> {
     return async (request, response) => {
         const result = await f(request);
         response.status(200).json(result);
@@ -68,7 +64,7 @@ export function sendResult<T>(
 //#endregion
 //#region  --- Parameter and Body value helpers
 
-type RequestValueGetter = (r: ExpressLikeRequest) => string;
+export type RequestValueGetter = (r: ExpressLikeRequest) => string;
 export function createParameterGetter(p: string): RequestValueGetter {
     return r => r.params[p];
 }
