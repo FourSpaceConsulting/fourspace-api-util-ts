@@ -11,7 +11,6 @@ import { LogFactory, Logger } from 'fourspace-logger-ts';
 
 const LOGGER: Logger = LogFactory.getLogger('error-handlers');
 
-
 /**
  * These functions handle errors after the API routes have been processed in the middleware.
  * Handling works like this:
