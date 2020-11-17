@@ -3,6 +3,8 @@ export * from './error/error-handlers';
 export * from './error/exception-service';
 export * from './error/http-error';
 // server
+export * from './server/context-factory';
+export * from './server/context-provider';
 export * from './server/express-interface';
 export * from './server/express-util';
 // settings

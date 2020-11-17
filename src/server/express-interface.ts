@@ -9,7 +9,7 @@ export interface ExpressLikeNextFunction {
 }
 export interface ExpressLikeRequest {
     headers: ExpressLikeIncomingHttpHeaders;
-    securityContext?: { isAuthenticated: boolean };
+    securityContext?: any;
     params: ExpressLikeParamsDictionary;
     body: any;
 }
@@ -47,7 +47,7 @@ export type ExpressLikeRequestHandler<TRequest extends ExpressLikeRequest, TResp
 export type ExpressLikeErrorRequestHandler<
     TRequest extends ExpressLikeRequest,
     TResponse extends ExpressLikeResponse
-> = (err: any, req: TRequest, res: TResponse, next: ExpressLikeNextFunction) => Promise<void> | void;
+    > = (err: any, req: TRequest, res: TResponse, next: ExpressLikeNextFunction) => Promise<void> | void;
 
 /**
  * Configuration for an express route
