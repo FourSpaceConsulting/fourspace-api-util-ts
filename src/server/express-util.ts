@@ -69,25 +69,31 @@ export function sendResult<R extends ExpressLikeRequest, T>(
  * @param requestHandler handler
  * @param action pre action
  */
-export function preHandle<TRequest extends ExpressLikeRequest, TResponse extends ExpressLikeResponse>(requestHandler: ExpressLikeRequestHandler<TRequest, TResponse>, action: ExpressLikeRequestHandler<TRequest, TResponse>): ExpressLikeRequestHandler<TRequest, TResponse> {
+export function preHandle<TRequest extends ExpressLikeRequest, TResponse extends ExpressLikeResponse>(
+    requestHandler: ExpressLikeRequestHandler<TRequest, TResponse>,
+    action: ExpressLikeRequestHandler<TRequest, TResponse>
+): ExpressLikeRequestHandler<TRequest, TResponse> {
     return (req, res, next) => {
         action(req, res, () => {
             requestHandler(req, res, next);
         });
-    }
+    };
 }
 
 /**
  * create a new handler that performs an action after the supplied handler is executed
- * @param requestHandler 
- * @param action 
+ * @param requestHandler
+ * @param action
  */
-export function postHandle<TRequest extends ExpressLikeRequest, TResponse extends ExpressLikeResponse>(requestHandler: ExpressLikeRequestHandler<TRequest, TResponse>, action: ExpressLikeRequestHandler<TRequest, TResponse>): ExpressLikeRequestHandler<TRequest, TResponse> {
+export function postHandle<TRequest extends ExpressLikeRequest, TResponse extends ExpressLikeResponse>(
+    requestHandler: ExpressLikeRequestHandler<TRequest, TResponse>,
+    action: ExpressLikeRequestHandler<TRequest, TResponse>
+): ExpressLikeRequestHandler<TRequest, TResponse> {
     return (req, res, next) => {
         requestHandler(req, res, () => {
             action(req, res, next);
         });
-    }
+    };
 }
 
 /**
@@ -96,7 +102,11 @@ export function postHandle<TRequest extends ExpressLikeRequest, TResponse extend
  * @param preHandler pre action (nullable)
  * @param postHandler post action (nullable)
  */
-export function decorateHandler<TRequest extends ExpressLikeRequest, TResponse extends ExpressLikeResponse>(handler: ExpressLikeRequestHandler<TRequest, TResponse>, preHandler: ExpressLikeRequestHandler<TRequest, TResponse>, postHandler: ExpressLikeRequestHandler<TRequest, TResponse>) {
+export function decorateHandler<TRequest extends ExpressLikeRequest, TResponse extends ExpressLikeResponse>(
+    handler: ExpressLikeRequestHandler<TRequest, TResponse>,
+    preHandler: ExpressLikeRequestHandler<TRequest, TResponse>,
+    postHandler: ExpressLikeRequestHandler<TRequest, TResponse>
+) {
     const step = preHandler == null ? handler : preHandle(handler, preHandler);
     return postHandler == null ? step : postHandle(step, postHandler);
 }
