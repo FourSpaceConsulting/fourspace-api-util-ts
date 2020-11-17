@@ -78,7 +78,7 @@ export function preHandle<TRequest extends ExpressLikeRequest, TResponse extends
     action: ExpressLikeRequestHandler<TRequest, TResponse>
 ): ExpressLikeRequestHandler<TRequest, TResponse> {
     return async (req, res, next) => {
-        await action(req, res, (e) => {
+        await action(req, res, e => {
             if (e !== undefined) {
                 next(e);
             } else {
@@ -98,7 +98,7 @@ export function postHandle<TRequest extends ExpressLikeRequest, TResponse extend
     action: ExpressLikeRequestHandler<TRequest, TResponse>
 ): ExpressLikeRequestHandler<TRequest, TResponse> {
     return async (req, res, next) => {
-        await requestHandler(req, res, (e) => {
+        await requestHandler(req, res, e => {
             if (e !== undefined) {
                 next(e);
             } else {
