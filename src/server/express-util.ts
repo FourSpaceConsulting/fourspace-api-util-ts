@@ -64,6 +64,10 @@ export function sendResult<R extends ExpressLikeRequest, T>(
 //#endregion
 //#region  --- Request handler decorator functions
 
+function callNextOnReject(p: void | Promise<void>, next: ExpressLikeNextFunction) {
+    (p as Promise<void>)?.catch(e => next(e));
+}
+
 /**
  * create a new handler that performs an action before the supplied handler is executed
  * @param requestHandler handler
@@ -73,9 +77,13 @@ export function preHandle<TRequest extends ExpressLikeRequest, TResponse extends
     requestHandler: ExpressLikeRequestHandler<TRequest, TResponse>,
     action: ExpressLikeRequestHandler<TRequest, TResponse>
 ): ExpressLikeRequestHandler<TRequest, TResponse> {
-    return (req, res, next) => {
-        action(req, res, () => {
-            requestHandler(req, res, next);
+    return async (req, res, next) => {
+        await action(req, res, (e) => {
+            if (e !== undefined) {
+                next(e);
+            } else {
+                callNextOnReject(requestHandler(req, res, next), next);
+            }
         });
     };
 }
@@ -89,9 +97,13 @@ export function postHandle<TRequest extends ExpressLikeRequest, TResponse extend
     requestHandler: ExpressLikeRequestHandler<TRequest, TResponse>,
     action: ExpressLikeRequestHandler<TRequest, TResponse>
 ): ExpressLikeRequestHandler<TRequest, TResponse> {
-    return (req, res, next) => {
-        requestHandler(req, res, () => {
-            action(req, res, next);
+    return async (req, res, next) => {
+        await requestHandler(req, res, (e) => {
+            if (e !== undefined) {
+                next(e);
+            } else {
+                callNextOnReject(action(req, res, next), next);
+            }
         });
     };
 }
